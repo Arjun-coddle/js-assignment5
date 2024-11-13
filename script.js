@@ -72,22 +72,38 @@ toggleButton.addEventListener("click", function () {
 
 
 // 3. Create an image slider without referring online codes, completely by yourself.
-let currentSlide = 0;
+const sliders = document.querySelectorAll('.sliders img');
+let slideIndex = 0;
+let interwellId = null;
 
-function showSlide(index) {
-  const slides = document.querySelector('.sliders');
-  const totalSlides = document.querySelectorAll('.sliders img').length;
-  
-  currentSlide = (index + totalSlides) % totalSlides;
-  slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+document.addEventListener('DOMContentLoaded', initializeSlider)
+
+function initializeSlider(){
+    if (sliders.length > 0) {
+        sliders[slideIndex].classList.add('displaySlide');
+        interwellId = setInterval(nextSlide, 5000);
+    }
+ }
+function showSlide(index){
+
+    if (index >= sliders.length) {
+        slideIndex = 0;        
+    }
+    else if(index < 0){
+        slideIndex = sliders.length -1;
+    }
+
+    sliders.forEach(slide => {
+        slide.classList.remove('displaySlide');
+    })
+    sliders[slideIndex].classList.add('displaySlide');
 }
-
-function changeSlide(direction) {
-  showSlide(currentSlide + direction);
+function prevSlide(){
+    clearInterval(interwellId);
+    slideIndex--;
+    showSlide(slideIndex);
 }
-
-document.querySelector('.prev').addEventListener('click', () => changeSlide(-1));
-document.querySelector('.next').addEventListener('click', () => changeSlide(1));
-
-setInterval(() => changeSlide(1), 5000);
-
+function nextSlide(){
+    slideIndex++;
+    showSlide(slideIndex);
+}
